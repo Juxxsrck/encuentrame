@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2b1d16">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Nuestra búsqueda</title>
+<style>
+  :root { --bg:#2b1d16; --card:#3a2a20; --ink:#fff8ef; --muted:#d9c3ad; --accent:#f2a65a; --ok:#8fd19e; --bad:#ef8a80; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100dvh; background:var(--bg); color:var(--ink); font:18px/1.5 Georgia,serif; display:flex; justify-content:center; }
+  main { width:100%; max-width:480px; padding:24px 16px 48px; }
+  h1 { font-size:1.7rem; margin:.2em 0; }
+  .card { background:var(--card); border-radius:16px; padding:20px; margin:16px 0; }
+  .place { color:var(--accent); text-transform:uppercase; letter-spacing:.12em; font-size:.75rem; }
+  .clue { border-left:3px solid var(--accent); padding-left:12px; color:var(--muted); font-style:italic; }
+  button { font:inherit; width:100%; padding:14px; margin:8px 0; border-radius:12px; border:1px solid #6b5443; background:transparent; color:var(--ink); text-align:left; }
+  button.primary { background:var(--accent); color:#2b1d16; border:0; text-align:center; font-weight:bold; }
+  button.bad { border-color:var(--bad); color:var(--bad); }
+  button.link { border:0; text-align:center; color:var(--muted); font-size:.85rem; text-decoration:underline; }
+  .dots { display:flex; gap:6px; margin:8px 0; }
+  .dots i { flex:1; height:5px; border-radius:3px; background:#5b4535; }
+  .dots i.on { background:var(--accent); }
+  a.lnk { display:block; padding:14px; border-radius:12px; background:#1db954; color:#04210e; text-align:center; font-weight:bold; text-decoration:none; }
+  input { font:inherit; width:100%; padding:14px; border-radius:12px; border:1px solid #6b5443; background:#2b1d16; color:var(--ink); text-align:center; letter-spacing:.2em; }
+  .bad-msg { color:var(--bad); min-height:1.5em; margin:4px 0 0; }
+  .reveal { color:var(--ok); }
+  .qr { background:#fff8ef; border-radius:12px; padding:12px; width:min(300px,100%); margin:12px auto; }
+  .qr svg { width:100%; height:auto; display:block; }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+// Cifrado compartido (build en Node y navegador): PBKDF2 + AES-GCM
+const enc = new TextEncoder();
+const dec = new TextDecoder();
+
+const norm = (s) =>
+  s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim().replace(/\s+/g, ' ');
+
+const b64 = (u) => btoa(String.fromCharCode(...u));
+const unb64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+
+async function deriveKey(pass, salt) {
+  const base = await crypto.subtle.importKey('raw', enc.encode(pass), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+    base,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt']
+  );
+}
+
+async function encrypt(text, pass) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(pass, salt);
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(text)));
+  return b64(new Uint8Array([...salt, ...iv, ...ct]));
+}
+
+// Devuelve el texto o null si la clave es incorrecta
+async function decrypt(blob, pass) {
+  try {
+    const raw = unb64(blob);
+    const key = await deriveKey(pass, raw.slice(0, 16));
+    const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: raw.slice(16, 28) }, key, raw.slice(28));
+    return dec.decode(pt);
+  } catch {
+    return null;
+  }
+}
+
+const DATA = {"title":"Nuestra búsqueda","herName":"Amor","intro":{"text":"Hoy vamos a jugar a las escondidas, pero con una diferencia: yo me escondo y tú me buscas siguiendo las pistas. Además, veamos cuánto sabes de mí.","clue":"Empezamos en casa. Responde bien para saber hacia dónde salir."},"stages":[{"place":"Minuto de Dios","question":"¿Cuál es mi comida favorita?","options":["Churrasco","Hamburguesa","Arroz con atún y lentejas","Frijoles"],"wraps":["Xy7V0A8qTqwqK7GJB7k2OTuebMnMZO0GQwJaljruLqavNTADDZQyHO3UpxYiMZy52iwJAHDGghhpaulKuStZcokXmiQmJHxxsIq9XQ==","epvJAWEJTMOFb9QnJE4FyJUE45YETpPqd7XnUJ6gpCW1k52x58hNVJ7iFMJwhydqvkQOMBAgzp+WpeqliXMn0f5xBnWYXfSXWh4JEg==","C+GhIQdrAHoi9fClwtoMJnrDs/jD0HBkJYroo0cMSEhsV1vBb/4wVza5pAs+yLBhMup6t9bGGzrxuYa29vaf4o3Z9fPXjwNaWFXHUQ==","MeIrykxyM+/NRJEcC6C5WQ4szwtgbm1Oq3oM/RWNjlYG0CKJQiHPVNNv41wQqI16y76C3azYTjdBpgwhe4mhUXwBPY6idq+y+lSVgA=="],"payload":"Wl/wt0VbrMriyNWkAgUJvdntayxEwWhmLwQifjIS/VyizwPUqJWtsQ30wh6llqD7CeshrjPThMY53DFOBxDRXCZYcFRlVCFYZnjkTf2BQ61GF6Lemdl00sl5pE2HrUKsRx/5d7JMI0R6gCtDGxsF71/lUeAGwkW5mXUn1bBGw9fRJ3rryWbQ0MLK+2alT1igxeZZMrSOTMHux1P1G++EH5U18xR7PnDfMU8hd7NElv/Ck3NbzOJpXum0BU1BlbE69vFNWfPxEYB8X+KsEfk2tfhX9ypF0fQDW+cSm3DZ4O/Wi7SN+8eh5Z/kqRmA11URSv1e6w1p2gfy1DxGkyk/LXxEB1BtYsxgdIXY/JywHyrwaypNbohMwcrr0mvnbxiUX/Axl/wyT1EWS4fn1Z9Kge/oSwexnqnRQnwqvEvWLX8r1C1i9Dr5UasyMhK2VcB387NdIUAi8u0JSt4v8oaYog7OumXmzPgWiJYV9UE82zo8J/4=","rescue":"hlKOojvfS2XbcbXtWxieoUOqcNGmo7PIqnFehODeZ2lDRNfwkHElMPkBstqEX9QliCJvaiHQ+Z5HiXLya6KSkzl27TqVSfABofgbrg=="},{"place":"Portal 80","question":"¿Dónde fue nuestra primera cita?","options":["Centro Internacional","Garagoa","Outlet de las Américas","Floresta"],"wraps":["isQsjWVLF131F2gn6DUz/xq9ONvP+DwOrWijNxukvVKuNSXa+BIVez11pXRX317qZmYvM1e6PH5uUf9hmWaisN6P8N0NuJurL7JkkA==","OYoYyX1Fv73MgsaV0Nh9bw0jYlRrXVReDYmcyS/ncguey3Al0yvfXTcYQnb+uSArXeDyodvgWECBM5jRJCGydTOfwes50pZt4Yr0vA==","EZd/1978ImL1hJ+x6vSTdvD+FQ40Au/MjldVemaqXVFF+SX/oqsHiGT17EBtATcCmW/iU8a2Rf25+Q1G/CwR3nj6/UtRT4oZxCStsQ==","+OxWu6eMZfu5HEgd8CU/qayk4AdN0VEadHtpxVQBq7OADGgj14GlYLJ3yI8RNdDc+zVfDTFkEiVefrBXICAbCxanCGyVKI+r2rl1Xw=="],"payload":"5YGBrYG/t9kktPhpPtPEAozEDOI18iwW+bfoPwCyiD1tuAVBjS3CCpQDFm+xlCNn9EFCiQeLAG9u3sANLoiIKpKZYhHFp8qJ8mqfur28BAx1GQbcbiPAnIrQrfp8xzVev9EPTiJxsOTmy/cv5av4zCJzKC+SkYYUbu/+2qn8Nc4Ecr6yVt/PW9+V/R0KGQLkptH8jNmfmk3DpxTCOXBp69H74INyd775LxANZbLD3TrNmRU+Y/YrsOpZdiPsMFUP2egB5X5GOWMbyvd1lNpdM18uLzw2gR0t6uhdXIcfrDQxyWCfyxSKMU4kqCa6fBEtlEFuXlpLwrxGkiychXvL8Q1dDQsxTlO22WBjIijjcqV+zZr2HB2A3c8oEmiMr7Q1TNQkjVi09Ww8tqNgD2HtNjU19QGoa3vBGFdzzSqcBrxZ1acUeNmK/SRvrbunmwlIliRdZDOd8w6LO/3rA4ZRrpTz1iosncq+rsB89Yz1TvIH0VuStc7OKooc02iaeAzbfLOvLABZfr4fI2xFAlJFY/zVSUQWmj/KEmUE6HGAN+JOqlSdFvxceTsUUbZrhVqCNZanhel6wl7q/LGQS5ly47vSIDYXvTcfd6TNBygSX4/iwXbGhKd9kbxns7PhhOrFOt1hxhV8wj4cnr4LMzpK4S/jRLR97viYotAzs93LqA2AFF/7aKkZigNvRP0jhe9KAv/u9hnMZpCMdHb7SEzAFFo7IclI8m+kPa297hyc3UiP9iG3SjkuV79ORDCVwoUUQdnPtAgpC0E5G8RmaJ4=","rescue":"wShtte/lhl37pOKIMbaNsFZmiZ6S0wdKXzhO8mogc4BcquesLB4zgkCPV0n71KbJzwK/8c8T0CBkkkN7Cg/DARRKjDboeewZwQTZPg=="},{"place":"Las Aguas","question":"Muchas canciones me recuerdan a ti, pero solo una de estas me recuerda más a ti. ¿Cuál?","options":["Conquista – Zona Ganjah","Ninguna como ella – Zona Ganjah","Dos que brillamos – Zona Ganjah","R U Mine? – Arctic Monkeys","Baby I'm Yours – Arctic Monkeys"],"wraps":["Z0G4aehz2FT39DswZcIXL9cUp+c+hhCTE8NpJ6ZNuOG4J13ppG7XO8GpS6tmaBO8TGteiApO6ji86hPdcVLelEZvxDJ+/E5FCJ6h8A==","AOkG+iD5eGOwfOvlsyRxcBETyYgZGoBnV/tMm3AU5vz2Ogf+j0HAksMkP5aLHSHtn9pufSkeHmBG3iZUqWlarGSJ84EN8jYA3429fQ==","lEwhdXVnOVQ8VMq0BNt3/dOn7LbAv8ntSc/ix2eS+D7SxLZlY/hHdWuFfMGX+IAxoc5f79pljwN/91/6TOdChGT9byE1B26yS7qQ8g==","ESUR3B1n6swGM5fCMhFI+GPW2w7+Mi9ZzPV0sv7nBOJ1GZtF8GHiZoFmT5ih66yBO6Yob0uRMfrZ3Hg1K/bDLRxPwJL7s7P5zHePcQ==","ScI/mzQgCNapM3LgKB383ep+x8rOtqKKiFG8TA97gIPt1sTfe2HwbCapesKXfI1mvLfaHDb2OBahdg+Nh4XkMrzMJRcqpk2v0+UeZw=="],"payload":"Kdg5hU73N/U812rP1pmAvahPlSEDVNt4BSMOS7WHUdKs5sliCN7zdeplMRBfmgkw6W2MafHeKBamlN334SIjbbbb/P66/f5xoldvCnWcZMu9SZc3gzphEQFR1feKk1kUvLf/SNPeCsgWnv5ZHxMUu4HXWkLl2rCLOfOPrHRAhoL21jLzKNeQ+O5Qqkz6qv6VyiaVdOXZ0QCNyzidJwnLnoNwWGwIt2jWXaDJvR2b9DWIXx3jVw/BgyYcVuIg0/rsqaD60BGFnhkRP3ijAen8HqPAXhFZeWYbkjvZYZWuihUjTkZduCY1WaIw2zmEZXjMaDil8RJ2EVd6MeYlAMBbx7GttfVkLtyfy2sVGGojauRfPpFHkXaaUA4P0hIDTkPIStnVU11vzkbixzzJqa2lmtPMqU6EJzEr4pQPiOTIMw0/QgSxJuCIevqvINzu3GyaSQNi46e+LmkI5WasZ+pBJKmeWfdgqh8S+59aH7BIHGTC/jEvOa7EEqb2JvsBF6n+04NZCL3NauClhHGEmtIOuR29GJUJIwZuFYOMnb7GgO3Yq/8JwTO7cxzMsdSuqw==","rescue":"q9SBl0aFP944LUZOLqwdDgBaZA4q5d0UNID01Et4uZJqH2u/hKjuPS5BdErl0xHvkUe4pU3gTQhU8/+eVr8xbLxf51eAVHGh3jciNA=="}],"final":"B4G35lrzR3oV8w/bAeOTju9C0uDj7WLY5yyFEqkyABLmiThUFGUY/wWqA23Of1ml9gofzBjD1lgU67icrfC61uvv7Clu8pnK6wXaZ8F0shbxfHiMfZ7QtJEcBuIzNuHUOod5x1hW1TnwP7rDjBOPJZmRpvk42OjMW8uCdR7u3KSfDhoBOOzXCbiPXzpA5uq94QikiV6sdtU8B0dqO/GDzs2+gd2p6TkWyYyBFKCwXTJWA2CAnlFqOi65cdkoyCR34hfzqwN7pEaIcamem4TW9gLRsW140bdsmg0HFAEvhC5aBnLX+F0="};
+const KEY = 'pedida-progreso';
+const $ = document.getElementById('app');
+const N = DATA.stages.length;
+const fresh = () => ({ i: -1, arr: -1, secrets: [], wrong: 0, log: [], pw: '' });
+let st = fresh();
+try { st = { ...st, ...JSON.parse(localStorage.getItem(KEY)) }; } catch {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch {} };
+const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const dots = () => `<div class="dots">${DATA.stages.map((_, k) => `<i class="${k < st.i ? 'on' : ''}"></i>`).join('')}</div>`;
+const currentClue = () => (st.i === 0 ? DATA.intro.clue : st.log[st.i - 1]?.nextClue || '');
+
+function renderIntro() {
+  $.innerHTML = `<h1>${esc(DATA.title)}</h1>
+    <div class="card"><p>${esc(DATA.herName)},</p><p>${esc(DATA.intro.text)}</p>
+    <button class="primary" id="go">Empezar</button></div>`;
+  document.getElementById('go').onclick = () => { st.i = 0; save(); render(); };
+}
+
+function renderStage() {
+  const s = DATA.stages[st.i];
+  const head = `${dots()}<div class="card"><div class="place">${esc(s.place)} · ${st.i + 1}/${N}</div>
+    <p class="clue">${esc(currentClue())}</p>`;
+  if (st.arr !== st.i) {
+    $.innerHTML = `${head}<button class="primary" id="arr">Ya llegué a ${esc(s.place)}</button></div>`;
+    document.getElementById('arr').onclick = () => { st.arr = st.i; save(); renderStage(); };
+    return;
+  }
+  $.innerHTML = `${head}</div>
+    <div class="card"><h1 style="font-size:1.25rem">${esc(s.question)}</h1>
+    ${s.options.map((o, k) => `<button data-k="${k}">${esc(o)}</button>`).join('')}
+    <button class="link" id="rescue">¿Atascada? Código de rescate</button></div>`;
+  $.querySelectorAll('button[data-k]').forEach((b) => (b.onclick = () => answer(b, +b.dataset.k)));
+  document.getElementById('rescue').onclick = async () => {
+    const code = prompt('Código de rescate:');
+    if (!code) return;
+    const secret = await decrypt(s.rescue, norm(code));
+    if (secret === null) return alert('Ese código no sirve.');
+    advance(secret);
+  };
+}
+
+async function answer(btn, k) {
+  const s = DATA.stages[st.i];
+  const secret = await decrypt(s.wraps[k], norm(s.options[k]));
+  if (secret === null) {
+    st.wrong++; save();
+    btn.classList.add('bad'); btn.disabled = true;
+    return;
+  }
+  advance(secret);
+}
+
+async function advance(secret) {
+  const payload = JSON.parse(await decrypt(DATA.stages[st.i].payload, secret));
+  st.secrets[st.i] = secret;
+  st.log[st.i] = payload;
+  st.i++;
+  save();
+  if (st.i >= N) return renderFinal();
+  renderReveal(payload);
+}
+
+const linkHtml = (p) => (p.link ? `<p><a class="lnk" href="${esc(p.link.url)}" target="_blank" rel="noopener">${esc(p.link.label)}</a></p>` : '');
+
+function renderReveal(p) {
+  $.innerHTML = `${dots()}<div class="card"><p class="reveal">¡Correcto!</p><p>${esc(p.reveal)}</p>
+    ${linkHtml(p)}<button class="primary" id="next">Siguiente pista</button></div>`;
+  document.getElementById('next').onclick = renderStage;
+}
+
+const unlock = (pw) => decrypt(DATA.final, st.secrets.join('|') + '|' + pw);
+
+function showMessage(f) {
+  $.innerHTML = `<h1>${esc(f.title)}</h1>
+    <div class="card"><p>${esc(f.message)}</p>
+    <p class="clue">Respuestas erradas en el camino: ${st.wrong}.</p></div>`;
+}
+
+async function renderFinal() {
+  if (st.pw) {
+    const txt = await unlock(st.pw);
+    if (txt !== null) return showMessage(JSON.parse(txt));
+  }
+  const last = st.log[N - 1];
+  $.innerHTML = `${dots()}<div class="card"><p class="reveal">¡Correcto!</p><p>${esc(last.reveal)}</p>
+    <p class="clue">${esc(last.nextClue)}</p></div>
+    <div class="card"><p>Cuando lo encuentres, escribe la contraseña que trae.</p>
+    <input id="pw" inputmode="numeric" autocomplete="off" placeholder="Contraseña">
+    <button class="primary" id="ok">Abrir mensaje</button><p id="msg" class="bad-msg"></p></div>`;
+  document.getElementById('ok').onclick = async () => {
+    const pw = norm(document.getElementById('pw').value);
+    const txt = await unlock(pw);
+    if (txt === null) return (document.getElementById('msg').textContent = 'Esa no es la contraseña.');
+    st.pw = pw; save();
+    showMessage(JSON.parse(txt));
+  };
+}
+
+function render() {
+  if (st.i < 0) return renderIntro();
+  if (st.i >= N) return renderFinal();
+  renderStage();
+}
+render();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
