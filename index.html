@@ -28,6 +28,9 @@
   input { font:inherit; width:100%; padding:14px; border-radius:12px; border:1px solid #6b5443; background:#2b1d16; color:var(--ink); text-align:center; letter-spacing:.2em; }
   .bad-msg { color:var(--bad); min-height:1.5em; margin:4px 0 0; }
   .count { font:700 1.6rem/1.3 ui-monospace,Menlo,monospace; color:var(--accent); text-align:center; letter-spacing:.04em; margin:16px 0 4px; }
+  body.bg::before { content:''; position:fixed; inset:0; z-index:-1; image-rendering:pixelated;
+    background:linear-gradient(rgba(43,29,22,.74), rgba(43,29,22,.74)), url(jungla.jpg) 38% 100% / auto 135% no-repeat; }
+  .hero.small { width:62%; margin:12px auto 4px; }
   .hero { display:block; width:100%; height:auto; border-radius:16px; image-rendering:pixelated; margin:8px 0 14px; }
   .reveal { color:var(--ok); }
   .qr { background:#fff8ef; border-radius:12px; padding:12px; width:min(300px,100%); margin:12px auto; }
@@ -79,10 +82,11 @@ async function decrypt(blob, pass) {
   }
 }
 
-const DATA = {"opensAt":"2026-10-03T12:00:00-05:00","opensLabel":"sábado 3 de octubre a las 12:00 m.","bypass":"T3+Br8pfpq23skh11Gh+THbb0IRJzYXhdYSoQ4TSMrcDG5yQqNQ5qiZh2AgZdA==","lockMs":300000,"title":"Encuéntrame","herName":"Changuita","intro":{"text":"Hoy vamos a jugar a las escondidas, pero con una diferencia: yo me escondo y tú me buscas siguiendo las pistas. Además, veamos cuánto sabes de mí.","clue":"Empezamos en casa. Responde bien para saber hacia dónde salir."},"stages":[{"place":"Minuto de Dios","question":"¿Cuál es mi comida favorita?","options":["Churrasco","Hamburguesa","Arroz con atún y lentejas","Frijoles"],"wraps":["ZLZPvfxcHIIXESh99ys9FdBWB1n26vsaN5c73Uu89xE/77pIk8dLsohOUKB20Fj16XN8+tTPiJvrBRtmg9VC64K112CfUNlcHU0bRg==","rTzWKeGbhPwsvrXy+3XBXNYSVwdnS9do2oG8c+NWmHfcbFZlnfDu035QXuUqKgkBChVFPNnG9I9RrVckTdLn9/yMRNNjXKrgQD2k0A==","qwmYnaSov4xiliTAoHqksDp7HlGKKT7czBGzxJuaQoRlLEQHO5m0A5ZJA8+K7NyWue71eNFfqSf4m5+o9HwFzFG/S73bLXFNzJWftA==","bRZj7KqZQ5FOGXVifiecCrsLD29QTEEp53YjsTjXWFJnLJ3HHq3LHi5eUOe4mQiMR94ZuVOViUhBeJDV/k+7SxRTgbw35MaC/8DwxA=="],"payload":"GFqQHRu0Rx6XoJftwx+GcDIUYBHyU7+qO0YfE/R1/exmT100q+YqiN5C+8iFDb7NNzhUgbMwfwuyjbrmWYuyumkvBkrtuxaQcRa2zFUkausFi73GiRb910gqF8feu5zAvBlw20+Bm4CRO52NuALKNV2XQ4NEQkJXQf1ai8xuCTr6V8wfLI2rEr5rkzILBjCEu2FZkZ6MWBussfIl3jabJVgc0sKxVDS3pa2NUmY77Y5yE9RC7IhWSXlBWu683xXpc5I8/ZIAHNUw8t/smLdqsC2YXvWqcx7/ymkzixunxuE6jbWdY4Eq/2CetiFphILbsOgjjp1rs7I00l/7Y8xQyyJ37UiYWepuGdaOnn9rPrSqqQHaVG5s/3R3PQDJQsfH4j6V9Itoa6nnd8UVekVl5mJTmj2wA2TKpcjzHccQIDdLMx/azRXvrI1pqtxijC20A9ODzseauor91FL+uMs54s1MPiZraEnA9EQ10uqKfAROEGCtpQ==","rescue":"cQbn5habLxdwTa8qMTBh4OAtCdXMNgSGM82LhQd0BAe812MYnfEah3yLOvmT3FOXYcnx1W9Tv1mhTM6SHMmdCH1d+2vXsP7MzG84xA=="},{"place":"Portal 80","gps":{"lat":4.7098,"lon":-74.1107,"radius":400},"question":"¿Dónde fue nuestra primera cita?","options":["Centro Internacional","Garagoa","Outlet de las Américas","Floresta"],"wraps":["scROWYt2VLmmyaIu2Nxs7qgYpjLOU6RaPn5brOusRJxXMeljyjbuC1Fa3yhdaUZgnHNKDJa97MyxEbQwxdNLKHdmgq6AYImJ14MQpw==","3BMqkNK6idvPyk/479D/PclpqjqgPIihKMPe7KSuc03YDM46UpYfK3Qg3AFvCKfLoFlb6VzlFU/9PTxQdthRW3Pn86fUv5QL3NeDBQ==","XgcSn0a1ER/VEx/om8IifZa70Aynd3q0cAJeethYThnw6qnBscYis7SmeYD4qYnVv96D8KY1UgqV1px0En+Yyl+O1gRFHOKNd5tGlA==","gO/s2cGOmGjTRLRNzJe/spqKtK867H/YvtgW/kW6nfcWhPklS7szrvijQCQu3pmbcYbaEP99rVsxLCiIr0fSCFWcYCfr4zm/5L0y5g=="],"payload":"1kZqA9p74XPBJFnnZ4gAdNYeEYghY+aIot+F2g3H0/Jcm8QRrUHAw9vMRvy8cgbWV8DSIZtV5VxlaMUVHvTRlJHoha3XgqlmnFSP8plLx3CmLtXkmvBTJyEKNpIwSSGNutSfFR1V9y6PxxxGwBflqQBAA2SR8X4ISznM1yOJ3im82CC9iEVTPd4rtyUSjZqBSI1VSmGAkXDmoPheavSPs7Cw35OCsX/g9uu9266k7s8O/RdprArSPUJzF1R7yjLtMNFSqFgGgH7EQngEVoPbQJIL+qkL/Y5xVwKlk822w9IDtDrBVlbblWVSYIJfeLu3IoskzY8rp6wEl2UBB4zs8PVhH44rVBx9u7KyUypdbYG87/89g5RDHd7Eji6wj/hS6kqbAgwQiz6hBMZqwSk/xYYPxfTGCfig7eaNhAcuJEhYJGP5hNYqFnF+Ljuaz3/JSaMxqjT0fdAzcz8Mgc59o3IiXwp2A/tAp9TNyAAeI0S5Zb1a3xrjDfHjuvyIIx2T+ibxr48zJzrlGlaJoL6+QNxyYXSh1dgWpg9vA3/HbG870F0BsL4X8dDOSZ+MRxd4TI3bJyngPxNxBA03uDI0voBz7FrKqXS7rbymX/Jgky3IIubZe3BUL+hMv7CODJaRRbVZ28ST5K6ImaGId9UlPxa3Yncfdmu4rp27fES21u1cTb4s4BFSK0CdzQ2HoEbgM5AwDMVx+nCLFNUpBgLNiJScCpVgSN3Uk08pYMc2A0sYGa5izaqm+uubujuTM+OL52XlYP/ajVGb1vw7OtjTQETRoM8ndDymjnO87EAIs3Txlf4Xs+p9KyMSDAgjdIieAxXr+IQDykofDKEEp13vrA2HO9FKH8bgsd82FDWA2cvnPJMvC7m5d1ARj3/cwg==","rescue":"LIPjAjOGL5CZiq8SOg0uco6j8SlKhhEevdKj8xnhXq+xxPc+XSfFTFeM+ZnCDJWTNMhOO5AvHNeB5LBe9Zlm48bylqPPZH/A+frJlw=="},{"place":"Las Aguas","arrival":{"button":"Parece que ya llegué","question":"¿Dónde estás?","options":["Virrey","Unicentro","Aguas","Tintal"],"correct":2},"gps":{"lat":4.6033,"lon":-74.0667,"radius":400},"question":"Muchas canciones me recuerdan a ti, pero solo una de estas me recuerda más a ti. ¿Cuál?","options":["Conquista – Zona Ganjah","Ninguna como ella – Zona Ganjah","Dos que brillamos – Zona Ganjah","R U Mine? – Arctic Monkeys","Baby I'm Yours – Arctic Monkeys"],"wraps":["pnO7JVk8f20YlenQPWl/qAwbxb8+zaz7AJxn/vOTXuiFHGMzzy40eoIIjAkKYmzifhEfyB/Dbx5rzO+v0lsBLVRAjUPuTt3487DGrQ==","Q+jdOppXXqokGnA+Jc0YA15XcTnYu4B4ejCkX/RBJbds+JDMQkYZKwjksT7jxefFwAdwKMeX31FSv1FGFwqo4UJh2WgsPPh+iSn8lQ==","cCjiXcHsEO40m4LEKjH3mhqtPAYv5jrRBASk4AULR5IWg1AchyUE/4xWc8sc8VlVXIyrZWTECD6pmq04obYIuhZjv6JFhJPVgxya1w==","dwNn0g3ajxF1ilHAroTlEux3GtN762egU37j2SPF2zdNxtGsu1pUMePa86cJ+y4VdEzwyPkgfazUfWCrYyoq8C9R5pZg4SShhLVRJQ==","SoHTMYcZDwjJqsMboZANTeQ4VbZ/InjgYUdveuvCHr4v0b3B9P8McaFy1EDw1L19KVyvvTvybqebJGDQ+o2JQ1ps+3gG40J+C6HkgQ=="],"payload":"Xl6uHGjg25Lg8ArSL0qKhcpPlxvAonX5wy9ooDKs39ddhtxwZwrl16cHLPI5dULxuryGvRcroYA0SMM7GWQKmEC+THhiIPbPSZjBRL9uTo/I3v1jQh02QfL+8vVg7H8KVQ75Y/ocvlemg7cJZP4IGBX4eQxCNw+87HXQG4JKKH7cyJ/V7LY0EuTU+AgKx440hOiLEMNW9A22h4O/5drjBvtpWs82ZtRZA/bw/gtuef0ADKmBZ/pTi1lsBR2ZDAX3gdZB9gYx5t/Lix/qS3tO3z6d2CigQD7L6Ojg7ZiAP5LSDLtCYJ5+1WeSGUCxrPIJD5ucjpJiUM4vdcMxapxy88C6CLOtBVeNTmiY1qOG00R7+Xu0rDk82VTbrfJO7t+aw98zrLNa22MNYlSGUqxI1yani2pRtvgehpYk5/TVGw2cnwKTfzn8x2yJpAscZweLE3LE3STBFMxVO112ALpwFyR9zLROstliECVwlVotaLHG4wa0hNAoDLRfC+znP4eXy3TEuzs7mpcby+uiATrGmTBRLHPUtLoJp4vsAZG75xC7xDved1aCCJUaplEw/A==","rescue":"CPwnE1dKsxZNzvrJ7JFR56dd/4jNRpIXiqK5takoyVrhGHec4fIhnNDiw/xS73gPrjq0Ly7JTnV7E7istQOI2patssLwdscry0voMw=="}],"final":"7r1Umi50jamQ2/np7PMd94ZepcuPK2vKOXs7gQEt3ri8c/OVpoc3p9JxrbhsHlndbvg+mICOTb5EPwPqrlj/eRcJNdKaxeQXovd/8uzpB6+eiEHKBdn2Uy5fCTHAIr3pGdrErevFM4IRu2WiYpgXIKlTJlV7P5W7YYCQQDFfBftpw2oPABeizxZj9XCxrK9dQHuIDd9mgb84+UHI0vvKNI/JpRd3h8q8B6D9L7se2NukXxqvdihZz5T+hh1hTEH+1qu2VUSbGn2qYMq4uH78BJWTOg3VCngVZU+9s3J6JPGpLOSqNOT7Kh+hpxw5qlzYynLM2rNeKNbv9tt/+Ck5Gdkw8xEGAvF9D05dbMuztmu4lH/iJ0OJxUNz40DizikRLbIzgroRYC+tUtCfpmyihudvkYT13QBtJCLs4ggGA9bUBNFtHaRuPGyBJf5TjvDU9jdsdqDEVE7PyD2rFr7sGWQo15hSKN8CP3fWEH7HLkScclyfe8NyQ4ddDN7s5sR+vZKeHUB6Wxf4O19L/FZFCGj6lZhz8BSs4VQabfihDYkY4KpiTpMgK0zyBFor61bK1T84R2JY8P8C7P/1IqFpw9Y6gIiuHqcQWh1PGsJ+c9l+zANO/UNtNADDc+DrTkiZT4wp0oaB6Ti73Q=="};
+const DATA = {"opensAt":"2026-10-03T12:00:00-05:00","opensLabel":"sábado 3 de octubre a las 12:00 m.","bypass":"F9v6AVQezmsSkn9yYx7EOfdvvL74rGyvevhvpPo9ET39gegW/CMwu5kAYgwskA==","lockMs":300000,"title":"Encuéntrame","herName":"Changuita","intro":{"text":"Hoy vamos a jugar a las escondidas, pero con una diferencia: yo me escondo y tú me buscas siguiendo las pistas. Además, veamos cuánto sabes de mí.","clue":"Empezamos en casa. Responde bien para saber hacia dónde salir."},"stages":[{"place":"Minuto de Dios","question":"¿Cuál es mi comida favorita?","options":["Churrasco","Hamburguesa","Arroz con atún y lentejas","Frijoles"],"wraps":["jzPLK6MKNfwxtFp/S422z8YHbmMtGsYm8PSBugdZ/H9BYCzPXXNSzGS1qJEpxn/9seiDZJXULdktxHNYTLMWKLRQe7UOCAvSS/1CQA==","PBMWNsTer3uT0O2o+egwJcdBc/Ocsk84cN0mysoZixvqxPg+o44He11FYYJ5QyerPFPCfDmtyGeXYePs8Rqi2Kx6nzCpiERwXBk92A==","6iuT5MINLkmt6LcKt2oCxfWoTjtn4MrQQIC6hMsALOgkZnhuqUuKFaB0zYTPsgode1K0bbkrgm/WxnRgjY7cE07eSSBX+pPVkyDotQ==","KSPzfD0JPxupo3jjhnj2j0NoSktwXoiMGo+P9zemlo8cPJWn9K7rjgO6e5LQp95SkjJa39XorzgyaYfkmGjkqb+Hzt2DsvfbpUsN6Q=="],"payload":"idwE5YFceVzvxTrPZzd7xcif2gJ5gEUo4xJ0w7hejWQbe0F8ctwu8yqED4eWfm2u2JT+6ROcSkrM9ktH9CihwhoLUujN8j2O0Mi+O38I2rOiOAcGZJyQbJBdr/pTIsUD7XJMoPDJwh34Tws6k1a+93Wd3ALduZO3UbyJqqJVm2lpC3FXxfqZOj64DC7AHxSWU7aR9qqtCc3g3zQF67HJtbS9GYrhSepqa9zYH46GBxWzRrrIP8jGqQNPlJse5nYDn3dxu/Y3ejyjr2zhUbpyOO6WvWlBiuKq8G4by52d1JrRV2ZEr02qt0Ts3KrTfZ1DHhFeYeSCbG7zmvZQIAcUPy4M4FBU22fbBEqO738a9QqftG1wbvxwQqBO1+2GIT2Mu1SjLwChcp1iTVwGBlEDEnTs28TzkT8wU2XzUJaqayCgLocLuD65JVqq9KoEom7iYjBA/rPWPIYAdlqGTI0sn57nMD39vrXlb5oAWAlP/ndEyPP5AQ==","rescue":"UuLCj9kyl1cfxVA9Hbkaea/CM0Fz04WKxPUK5MvsI2ZtUfFPOxQABm6dKWSLE5LZ6mF8vYV36u4MESFkIxPq7K3XREPAZPaoL4frBw=="},{"place":"Portal 80","gps":{"lat":4.7098,"lon":-74.1107,"radius":400},"question":"¿Dónde fue nuestra primera cita?","options":["Centro Internacional","Garagoa","Outlet de las Américas","Floresta"],"wraps":["kmRjhKBlSN1ER9ZZSwauC5Wup3PJL7YFazqA08wGuMd0VR6aYpbnDLolIN/JT3OZdmsdCDpW54BSWR9g9kn9I/QeM01svD8ucwT11A==","fmVqBl0SqZUAzSXJVL4mhdidI9k6ZubQG+M6jWfFcTShNzjw38/AhmuJmC6QKOJZXK4n5MZjq4utG2/2uChUthak/d9DCqjnfA6+Rg==","tz5rU3Czwz5METb3hIyKcohsKSHDSs8O+VHTGhR1740Kt2u5ku0jKgWAbBdMabU84f57i0yrHh+E0q8KW0m5w4wH3Q8RabvXMk7QOQ==","PSXbh0+nQv92Q/priJXEAyLZ0WoyaHigxMEA5FTgGqlEjmfwtIXQX/5xyP5EyXxFo3m4dw5ceSUjUFLh9LUh4svixyqF/oE7lwV0Qw=="],"payload":"NQcpyzUf9A6NFN70IlqIpRB4WTqospjco1vv5OZMA6CV5XEMLbxPyvnWyJ7QCFNyHq4U+vu2YKYR7FCDVowF5VP5NTuwZghMAGkvSvAjANFm0YqxPtprOQ3cdmkFo5XKfXI9RptJU6AI84sZyyDU5rMg9RBX8qzHiP3tzfyDPjPnQ5Y1svheuKggAKmFq0Cca5YhQUBKoVZPGXgEB8wTccN9i1C+DQn3oI3EH+BjqXUlo8RNKx6cbfIElkno85NFRAWe5aKxrGd5sneF0faOU/FGDbm27yNiN1c34z+hYDANXzkYC/12MBdcAPOirBfM9WHgnSGRaz9W6H/qtv+CKXDp8ywbOdKvt7A6gbcB+2p/KVBMXEAT6FNIx4ZsGr8Rvc2X3Bf38TWmnhBXwfAgq+oHaG5ojwBK622s0h1/VFmG0LbLThmzPISvcTtBtLHYS7VR6beML6Vbssdnr7u0adIZ0BrZtNK+tq7G3uRUiP8FzyUlGNjgc+euS6vyFPWbEE8cF+c9BD3Pg5gbgRom4mJD0+xFAR2UdQSDtBnKW7XLaQBuMN396hLLwm2N2KBBQPXx3aFhJ+ayRYUsgfQ2n2LNMHQCiUYJNJXkFtExm6lqj5KPHjWCnilWo71IN9qfIUY0U6C+ULX3g8NsuLHK1SM2uPmUwIoH4OT96iKHIznriuw+L4s3wbjMArGP9D881FlBmMv6QskStxLmCiVgPrbxmUUY5BZsneC4IyeSPkqdv7IGm7tT6+PhR7bm59xAV4SSS2vjVGA4mJHQ5ShgZQHHWSQ8laP+Jaa/D0kzWBF8hE6rmxQ++RsaoZQ/nj05VQv6G54KRoyBSAEgJG7jg2VaqfTcS0IEFlL/LcuFuuD3gl3bDsKwcW8bPW9Yfw==","rescue":"FKPB6607UqqSVPLkB20C4eODrlHvtQ8fb21C4Kg6OvjfhstFEVo5E7Ddf5yqkDq6Qt23LnoJDnmHjYdcUW4RALunOLBOvqqqZbL8QQ=="},{"place":"Las Aguas","arrival":{"button":"Parece que ya llegué","question":"¿Dónde estás?","options":["Virrey","Unicentro","Aguas","Tintal"],"correct":2},"gps":{"lat":4.6033,"lon":-74.0667,"radius":400},"question":"Muchas canciones me recuerdan a ti, pero solo una de estas me recuerda más a ti. ¿Cuál?","options":["Conquista – Zona Ganjah","Ninguna como ella – Zona Ganjah","Dos que brillamos – Zona Ganjah","R U Mine? – Arctic Monkeys","Baby I'm Yours – Arctic Monkeys"],"wraps":["KGZG6ZLut3WCyjfFZy18CDHEH5tL5nUUVDF5yUi8eadcC4xxtrtNPMjsETvF/saWrOIB4GJZaYlSUz+esAnOQf3vj86SShgKwHNORA==","AZqQ6b8L2/pgUPQQrexU9ejQDTcWhpUek6zfah1zks6/OJhW1tcapdc2xce4DryZZdEDyVxTzNbddgI9OuKJnBqrtu9Yg2R1X/CUCQ==","WPNbsrUuwFNmdPy25jikDNhZtzTEZFVVi3nQPK/ySTtySbJG2TgoUGOuTKk1aBrL0/8tN3j3EocMK+PKC+cT9TrdH3BzV8zGmRxVkA==","YjuWDP+gmn1Cybewb9NqSHdGcQ1Mf3SNb+m7984fIEZZCFWe5nanzs+Kh2x8MLQrGvoSx8PUZdlE9AIxsvqNexnuAAx5DrcU4YkVZw==","d1gNhOivyugntj456FY7zUm6N3hxWqKdCJLy/rRbZkS0zFUFyU8LpLNMbjxBxUvMoJkHcFQo1S8Y9WYd47CrOWVbgiJKL9JR3hVZ9A=="],"payload":"lSKNQs7uejYorGKXO5t6a3VzJmAi0SWyvmHutt2cPiKHGn+GKSH83gabAONYjBEXR/PG9eXkmeyhfzJ+1k0sk3/LYlLKWRM6LCAvH6yaqlPSgTm5vFCklUrzKhUfeRbK/ZGvSvso6J7SDXBauo7jOcetum+gDHCSqjD2tAUJsGv433+8HzDl4Nnwlx+pFuwCnaw7dHmIDVDQWaO8fayOjiDoLovzcCg6mJs1GDm7kvw5eQ60kSBREYJWS4QOeEiP40woht6lcviEeeiuquhTvw7OLp4ykMo99m6SwW53B5J6icytSjxb6ZLWdpCAXRHtTD88qWWMAuZThW21HV5y9fWmtIYzAWmnoKLPQWTvEaKcSlIx8Sl58qYiJmrbMkGKcxGD1ZT75Ih50/dWX0wdPx4RpMXlY5qmLuYgBxDplp7cu32U3KpfoT0R20vUnHsC+7POLLosnBrchYDMY6r1861fGkDo0rEuFnloizblDbkCvf/K9pVz4iEq0VDA2SRPotbvAPun5AYeUbVxqP+5rU0faV92PR4uBRyPcrFZZsbUfqvvdn+Voe1k+7ZtrQ==","rescue":"asc7yp8F7B7MTLQrs+CEr0F+o/c8c3DVESSOCxIpJInllkJelXJ3MITWMCK0pf6OkUaivPUBDzDdlkR/M0+y2OZKIsJSoOhKyyCOsw=="}],"final":"RRzmtS4QY/kxgTiAIjoRwM7JYbuptobTKndyig6ZwX6P0v1VWDTc1+hHcxafkJRgrdBOjP9JtTawz4UofEXOQbG0pOv0cvh63cYW8D4maijfDCEErmpSPKARbrI07cF9r0l+O2Fx6LRlOT4SrdPgDlA4hQnKXyUA8GnSopNeDhz/Mml6tMtbYmj53V+bQFGVaCYf6DaVPT36a8dENAid3s8hJSPZkypAmZElivfsc1dqBBrlHNpye3Wac0NmHnoOG9O10e6ibs1uEvoIFtKSxbGYavg7C4aElWO9g0iKbJDUpjXYCtxUFAiP0mgaIltvIaAGVqpSQKYL9Mgjo1LrDBzQ8Bc7LZ53KYEmEnoFX7zFYawDuny9fdTVg7uqJCnEaB6HkgV/7yj8SuJtP8SEl7kP2LY23VWhQnjIpOGJ6KwegOfLRLEk5zkcmV14tv3bcvP+ubckYyH5xcb5ElNB/znOjra7ECeFFmzs3xy+gHhaAeL6B75IQRrcSqFCcCWwMtc0sp+gH49vFlj+7AycLr5G5srJ3AcDHl+cZu7pVLF7NYVCqWFMvTUcmADcNj6EspBEoNWbq3K1yvetBTS23ThTLZyfPxH4hEfQYj8sdKC/JN/xr9WqW1jLrHKtVUP8Ei5dOW0/vcaRlg=="};
 const KEY = 'pedida-progreso';
 const $ = document.getElementById('app');
 const N = DATA.stages.length;
+const setBg = (on) => document.body.classList.toggle('bg', on);
 const fresh = () => ({ i: -1, arr: -1, secrets: [], wrong: 0, tries: 0, runs: 1, lockUntil: 0, log: [], pw: '' });
 if (/[?&]reset\b/.test(location.search)) {
   try { localStorage.removeItem(KEY); localStorage.removeItem('pedida-pase'); } catch {}
@@ -133,6 +137,7 @@ function applyLock(sel) {
 const currentClue = () => (st.i === 0 ? DATA.intro.clue : st.log[st.i - 1]?.nextClue || '');
 
 function renderIntro() {
+  setBg(false);
   $.innerHTML = `${HERO}<h1>${esc(DATA.title)}</h1>
     <div class="card"><p>${esc(DATA.herName)},</p><p>${esc(DATA.intro.text)}</p>
     <button class="primary" id="go">Empezar</button></div>`;
@@ -140,6 +145,7 @@ function renderIntro() {
 }
 
 function renderStage() {
+  setBg(true);
   const s = DATA.stages[st.i];
   const a = s.arrival;
   const hidden = a && st.arr !== st.i; // no revelar el lugar si hay pregunta de llegada
@@ -228,6 +234,7 @@ async function advance(secret) {
 const linkHtml = (p) => (p.link ? `<p><a class="lnk" href="${esc(p.link.url)}" target="_blank" rel="noopener">${esc(p.link.label)}</a></p>` : '');
 
 function renderReveal(p) {
+  setBg(true);
   $.innerHTML = `${dots()}<div class="card"><p class="reveal">¡Correcto!</p><p>${esc(p.reveal)}</p>
     ${linkHtml(p)}<button class="primary" id="next">Siguiente pista</button></div>`;
   document.getElementById('next').onclick = renderStage;
@@ -236,10 +243,12 @@ function renderReveal(p) {
 const unlock = (pw) => decrypt(DATA.final, st.secrets.join('|') + '|' + pw);
 
 function showMessage(f) {
+  setBg(false);
   $.innerHTML = `<h1>${esc(f.title)}</h1>
     <div class="card"><p>${esc(f.message)}</p>
     <p class="clue">Intentos en esta partida: ${st.tries} (errores: ${st.wrong}).</p></div>
-    ${f.note ? `<div class="card"><p class="clue">${esc(f.note)}</p></div>` : ''}`;
+    ${f.note ? `<div class="card"><p class="clue">${esc(f.note)}</p></div>` : ''}
+    <img class="hero small" src="jungla.jpg" alt="">`;
 }
 
 async function renderFinal() {
@@ -247,6 +256,7 @@ async function renderFinal() {
     const txt = await unlock(st.pw);
     if (txt !== null) return showMessage(JSON.parse(txt));
   }
+  setBg(true);
   const last = st.log[N - 1];
   $.innerHTML = `${dots()}<div class="card"><p class="reveal">¡Correcto!</p><p>${esc(last.reveal)}</p>
     <p class="clue">${esc(last.nextClue)}</p></div>
@@ -290,10 +300,11 @@ async function checkBypass() {
 }
 
 function renderCountdown() {
+  setBg(false);
   document.getElementById('bar').style.display = 'none';
   $.innerHTML = `${HERO}<h1>${esc(DATA.title)}</h1>
     <div class="card"><p>${esc(DATA.herName)},</p>
-    <p>Todavía no es hora. Este juego se abre el <b>${esc(DATA.opensLabel)}</b>.</p>
+    <p>Todavía no es hora. Este juego se abre el <b>${esc(DATA.opensLabel)}</b></p>
     <p class="count" id="count"></p></div>`;
   clearInterval(gateTimer);
   const tick = () => {
